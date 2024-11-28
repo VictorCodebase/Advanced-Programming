@@ -14,6 +14,8 @@ public class Main {
         WithdrawalTransaction withdrawal = makeWithdrawal(ba, 1200);
         reverseWithdrawal(ba, withdrawal);
 
+        WithdrawalTransaction overDraft = makeWithdrawal(ba, 15_500_000);
+        attemptOverDraft(ba, overDraft);
     }
 
     public static void makeDeposit(BankAccount ba, int amount) {
@@ -22,11 +24,23 @@ public class Main {
     }
     public static WithdrawalTransaction makeWithdrawal(BankAccount ba, int amount) {
         WithdrawalTransaction withdrawal = new WithdrawalTransaction(amount, new GregorianCalendar(2023, Calendar.JANUARY,3));
-        withdrawal.apply(ba);
+        try {
+            withdrawal.apply(ba);
+        }
+        catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
         return withdrawal;
     }
     public static void reverseWithdrawal(BankAccount ba, WithdrawalTransaction withdrawal) {
         withdrawal.reverse(ba);
+    }
+    public static void attemptOverDraft(BankAccount ba, WithdrawalTransaction withdrawal) {
+        try{
+            withdrawal.apply(ba);
+        }catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
     }
 
 }

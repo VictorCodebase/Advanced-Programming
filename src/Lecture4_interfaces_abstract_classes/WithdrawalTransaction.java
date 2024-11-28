@@ -11,14 +11,6 @@ public class WithdrawalTransaction extends BaseTransaction {
         super(amount, date);
     }
 
-    private boolean checkDepositAmount(int amt) {
-        if (amt < 0) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
     // Method to reverse the transaction
     public void reverse(BankAccount ba) {
         if (transactionStack.empty()) {
@@ -34,16 +26,18 @@ public class WithdrawalTransaction extends BaseTransaction {
     }
 
     /*
-    Oportunity for assignment: implementing different form of withdrawal
+    Opportunity for assignment: implementing different form of withdrawal
      */
-    public void apply(BankAccount ba) {
-        System.out.println("Withdrawing amount:");
+    public void apply(BankAccount ba) throws InsufficientFundsException {
+        System.out.println("Withdrawing amount: "+getAmount());
         double curr_balance = ba.getBalance();
         if (curr_balance > getAmount()) {
             double new_balance = curr_balance - getAmount();
             ba.setBalance(new_balance);
             this.transactionStack.push(getAmount());
             System.out.println("Amount withdrawal successfully paid (Balance): " + new_balance);
+        }else {
+            throw new InsufficientFundsException("Insufficient funds");
         }
     }
 
